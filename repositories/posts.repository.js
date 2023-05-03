@@ -1,5 +1,3 @@
-const AppError = require('../utils/appError');
-
 class PostRepository {
   constructor (postsModel) {
     this.postsModel = postsModel;
@@ -22,11 +20,11 @@ class PostRepository {
     });
   }
 
-  updatePost = async (input, postId) => {
+  update = async (input, postId) => {
     await this.postsModel.update(input, { where: { postId } });
   }
 
-  deletePost = async (postId) => {
+  delete = async (postId) => {
     await this.postsModel.destroy({
       where: { postId },
     });

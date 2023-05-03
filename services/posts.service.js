@@ -43,7 +43,7 @@ class PostService {
     const { title, content } = input;
     const postData = { title, content };
     postData.updatedAt = Date.now();
-    await this.postRepository.updatePost(postData, input.postId);
+    await this.postRepository.update(postData, input.postId);
   }
 
   deletePost = async (input) => {
@@ -57,7 +57,7 @@ class PostService {
       throw new AppError(403, '게시글의 삭제 권한이 존재하지 않습니다.');
     }
 
-    await this.postRepository.deletePost(input.postId);
+    await this.postRepository.delete(input.postId);
   }
 }
 

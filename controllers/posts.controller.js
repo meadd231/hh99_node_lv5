@@ -5,7 +5,7 @@ const AppError = require('../utils/appError');
 class PostsController {
   postService = new PostService(); // Post 서비스를 클래스를 컨트롤러 클래스의 멤버 변수로 할당합니다.
 
-  postPost = async (req, res) => {
+  postPost = async (req, res, next) => {
     try {
       const { userId, nickname } = res.locals.user;
       const { title, content } = req.body;
@@ -23,10 +23,11 @@ class PostsController {
       }
 
 
-      await this.postService.createPost(input);
+      await this.postService.postPost(input);
       return res.status(201).json({ message: "게시글 작성에 성공하였습니다." });
     } catch (error) {
-      errorHandling(error, req, res, '게시글 작성에 실패하였습니다.');
+      // next(error, '게시글 작성에 실패하였습니다.');
+      this.errorHandling(error, req, res, '게시글 작성에 실패하였습니다.');
     }
   }
 

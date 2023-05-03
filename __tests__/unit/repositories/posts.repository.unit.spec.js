@@ -84,21 +84,42 @@ describe('Layered Architecture Pattern Posts Repository Unit Test', () => {
     mockPostsModel.findOne = jest.fn(() => {
       return 'findOne String'
     });
-    const post = await postRepository.findOne();
+    const postId = 1;
+    const post = await postRepository.findOne(postId);
     expect(postRepository.postsModel.findOne).toHaveBeenCalledTimes(1);
     expect(post).toBe('findOne String');
-    expect(mockPostsModel.findOne).toHaveBeenCalledWith(createPostParams);
+    expect(mockPostsModel.findOne).toHaveBeenCalledWith({
+      where: { postId }
+    });
   });
 
   /**
    update test
-   1. Model의 update Method를 호출한다.
+   1. postRepository의 update Method를 호출한다.
    2. 한 번만 호출되는지 테스트
+   3. 매개변수 테스트
    */
   test('Posts Repository update Method', async () => {
-
+    mockPostsModel.findOne = jest.fn(() => {
+      return 'update result';
+    });
+    const postData = {
+      title: 'updatePostTitle',
+      content: 'updatePostContent'
+    };
+    const postId = 1;
+    await postRepository.update(postData, postId);
+    expect(mockPostsModel.update).toHaveBeenCalledTimes(1);
+    expect(mockPostsModel.update).toHaveBeenCalledWith(postData, { where: { postId } });
   });
 
+  /**
+   update test
+   1. postRepository의 delete Method를 호출한다.
+   2. return test
+   3. 한 번만 호출되는지 테스트
+   4. 매개변수 테스트
+   */
   test('Posts Repository delete Method', async () => {
 
   });

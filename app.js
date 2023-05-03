@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const logger = require('./logs/logger');
+const errorHandler = require('./middlewares/errorHandler');
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./swagger-output");
@@ -34,6 +35,8 @@ app.use((req, res, next) => {
 
 // 모든 요청을 indexRouter로 전달. 모든 요청을 routes/index.js에서 처리하기 위함.
 app.use('/', router);
+
+app.use(errorHandler);
 
 // HTTP 서버를 실행한다.
 app.listen(port, () => {
