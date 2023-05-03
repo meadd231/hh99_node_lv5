@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const logger = require('./logs/logger');
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./swagger-output");
@@ -23,13 +24,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
 } else {
-  app.use(morgan('combined'));
+  app.use(morgan('dev'));
 }
+
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.url}`);
+  next();
+});
 
 // 모든 요청을 indexRouter로 전달. 모든 요청을 routes/index.js에서 처리하기 위함.
 app.use('/', router);
 
 // HTTP 서버를 실행한다.
 app.listen(port, () => {
+  logger.info('Server is running on port 3000');
   console.log(port, '포트로 서버가 열렸어요!');
 });

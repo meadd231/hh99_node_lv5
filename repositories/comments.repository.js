@@ -1,33 +1,34 @@
-const { Comments } = require('../models');
-
 class CommentRepository {
+  constructor (commentsModel) {
+    this.commentsModel = commentsModel;
+  }
 
   findAll = async (postId) => {
-    return await Comments.findAll({
+    return await this.commentsModel.findAll({
       order: [["createdAt", "DESC"]],
       where: { postId },
     });
   }
 
   findOne = async (commentId) => {
-    return await Comments.findOne({
+    return await this.commentsModel.findOne({
       where: { commentId }
     });
   }
   
   create = async (input) => {
-    await Comments.create(input);
+    await this.commentsModel.create(input);
   }
 
   update = async (updateData, commentId) => {
-    await Comments.update(
+    await this.commentsModel.update(
       updateData,
       { where: { commentId } }
     );
   }
 
   destroy = async (commentId) => {
-    await Comments.destroy({ where: { commentId } });
+    await this.commentsModel.destroy({ where: { commentId } });
   }
 }
 

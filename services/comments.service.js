@@ -1,10 +1,11 @@
 const CommentRepository = require('../repositories/comments.repository');
 const PostRepository = require('../repositories/posts.repository');
+const { Comments, Posts } = require('../models');
 const AppError = require('../utils/appError');
 
 class CommentService {
-  commentRepository = new CommentRepository();
-  postRepository = new PostRepository();
+  commentRepository = new CommentRepository(Comments);
+  postRepository = new PostRepository(Posts);
 
 
   // 댓글 작성

@@ -1,4 +1,5 @@
 const CommentService = require('../services/comments.service');
+const logger = require('../logs/logger');
 
 class CommentController {
   commentService = new CommentService();
@@ -76,6 +77,7 @@ class CommentController {
 
   // 에러 처리
   errorHandling = (error, req, res, defaultMessage) => {
+    logger.error(error);
     console.error(`${req.method} ${req.originalUrl} : ${error.message}`);
     console.error(error);
 

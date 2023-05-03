@@ -1,8 +1,9 @@
 const PostRepository = require('../repositories/posts.repository');
+const { Posts } = require('../models');
 const AppError = require('../utils/appError');
 
 class PostService {
-  postRepository = new PostRepository();
+  postRepository = new PostRepository(Posts);
 
   postPost = async (input) => {
     await this.postRepository.create(input);

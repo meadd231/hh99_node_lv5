@@ -1,11 +1,12 @@
 const LikeRepository = require('../repositories/likes.repository');
 const PostRepository = require('../repositories/posts.repository');
+const { Posts, Likes } = require('../models');
 const AppError = require('../utils/appError');
 
 
 class PostService {
-  likeRepository = new LikeRepository();
-  postRepository = new PostRepository();
+  likeRepository = new LikeRepository(Posts, Likes);
+  postRepository = new PostRepository(Posts);
 
   getLikePosts = async (userId) => {
     return await this.likeRepository.findAllLikePost(userId);

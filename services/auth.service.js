@@ -1,10 +1,11 @@
 const AuthRepository = require('../repositories/auth.repository');
 const jwt = require("jsonwebtoken");
+const { Users } = require('../models');
 const AppError = require('../utils/appError');
 
 // 클래스를 정의 Auth 관련 비즈니스 로직이 처리되는 클래스임.
 class AuthService {
-  authRepository = new AuthRepository();
+  authRepository = new AuthRepository(Users);
 
   sginup = async (input) => {
     const { nickname } = input;
