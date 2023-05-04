@@ -22,13 +22,8 @@ describe('Layered Architecture Pattern Posts Repository Unit Test', () => {
 
   test('Posts Repository create Method', async () => {
 
-    // create Mock의 Return 값을 "findAll String"으로 설정합니다.
-    mockPostsModel.create = jest.fn(() => {
-      return "create Return String"
-    });
-
     // createPost Method를 실행하기 위해 필요한 Params 입니다.
-    const createPostParams = {
+    const postParams = {
       nickname: "createPostNickname",
       password: "createPostPassword",
       title: "createPostTitle",
@@ -36,16 +31,13 @@ describe('Layered Architecture Pattern Posts Repository Unit Test', () => {
     }
 
     // postRepository의 createPost Method를 실행합니다.
-    const createPostData = await postRepository.create(createPostParams);
-
-    // createPostData는 postsModel의 create를 실행한 결과값을 바로 반환한 값인지 테스트합니다.
-    expect(createPostData).toBe("create Return String");
+    await postRepository.create(postParams);
 
     // postRepository의 createPost Method를 실행했을 때, postsModel의 create를 1번 실행합니다.
     expect(mockPostsModel.create).toHaveBeenCalledTimes(1);
 
     // postRepository의 createPost Method를 실행했을 때, postsModel의 create를 아래와 같은 값으로 호출합니다.
-    expect(mockPostsModel.create).toHaveBeenCalledWith(createPostParams);
+    expect(mockPostsModel.create).toHaveBeenCalledWith(postParams);
   });
 
   // 이거 테스트 하는 이유가 뭔지 모르겠음.
@@ -100,17 +92,22 @@ describe('Layered Architecture Pattern Posts Repository Unit Test', () => {
    3. 매개변수 테스트
    */
   test('Posts Repository update Method', async () => {
+    const postData = {
+      userId: 1,
+      postId: 1,
+      title: 'updatePost Title',
+      content: 'updatePost Content'
+    };
     mockPostsModel.findOne = jest.fn(() => {
       return 'update result';
     });
-    const postData = {
-      title: 'updatePostTitle',
-      content: 'updatePostContent'
-    };
-    const postId = 1;
-    await postRepository.update(postData, postId);
+
+    const { title, content, userId, postId } = postData;
+    const updateValue = { title, content, updatedAt: Date.now() };
+    const whereOption = { userId, postId };
+    await postRepository.update(updateValue, whereOption);
     expect(mockPostsModel.update).toHaveBeenCalledTimes(1);
-    expect(mockPostsModel.update).toHaveBeenCalledWith(postData, { where: { postId } });
+    expect(mockPostsModel.update).toHaveBeenCalledWith(updateValue, { where: whereOption });
   });
 
   /**

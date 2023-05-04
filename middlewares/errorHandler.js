@@ -1,8 +1,11 @@
-errorHandler = (error, req, res, defaultMessage, next) => {
+const logger = require('../logs/logger');
+
+errorHandler = (error, req, res, defaultMessage) => {
   logger.error(error);
   console.error(`${req.method} ${req.originalUrl} : ${error.message}`);
   console.error(error);
 
+  // error.errorCode 아쉽다. AppError가 아니라 다른 에러인 경우
   if (!error.errorCode) {
     return res.status(400).json({ errorMessage: defaultMessage });
   } else {

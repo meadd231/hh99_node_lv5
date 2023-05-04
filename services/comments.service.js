@@ -11,7 +11,7 @@ class CommentService {
   // 댓글 작성
   postComment = async (input) => {
     await this.postExistCheck(input.postId);
-    commentEmptyCheck(input.comment);
+    this.commentEmptyCheck(input.comment);
 
     await this.commentRepository.create(input);
   }
@@ -30,7 +30,7 @@ class CommentService {
     await this.postExistCheck(input.postId);
     await this.commentCheck(input);
 
-    commentEmptyCheck(input.comment);
+    this.commentEmptyCheck(input.comment);
 
     const updateData = { comment: input.comment, updatedAt: new Date() };
     await this.commentRepository.update(updateData, input.commentId);

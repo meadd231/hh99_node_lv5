@@ -4,7 +4,7 @@ const logger = require('../logs/logger');
 class CommentController {
   commentService = new CommentService();
 
-  postComment = async (req, res) => {
+  postComment = async (req, res, next) => {
     try {
       const { userId, nickname } = res.locals.user;
       const { postId } = req.params;
@@ -19,11 +19,11 @@ class CommentController {
       await this.commentService.postComment(input);
       res.status(201).json({ message: "댓글 작성에 성공했습니다." });
     } catch (error) {
-      this.errorHandling(error, req, res, '댓글 작성에 실패했습니다.');
+      next(error, req, res, '댓글 작성에 실패했습니다.');
     }
   }
 
-  getComments = async (req, res) => {
+  getComments = async (req, res, next) => {
     try {
       const { postId } = req.params;
 
@@ -35,12 +35,12 @@ class CommentController {
 
       res.status(200).json({ comments });
     } catch (error) {
-      this.errorHandling(error, req, res, '댓글 조회에 실패했습니다.');
+      next(error, req, res, '댓글 조회에 실패했습니다.');
     }
   }
 
   // 댓글 수정
-  putComment = async (req, res) => {
+  putComment = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
       const { postId, commentId } = req.params;
@@ -56,11 +56,11 @@ class CommentController {
 
       res.status(200).json({ message: '댓글을 수정했습니다.' });
     } catch (error) {
-      this.errorHandling(error, req, res, '댓글 수정에 실패했습니다.');
+      next(error, req, res, '댓글 수정에 실패했습니다.');      
     }
   }
 
-  deleteComment = async (req, res) => {
+  deleteComment = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
       const { postId } = req.params;
@@ -71,20 +71,7 @@ class CommentController {
 
       res.status(200).json({ message: "댓글을 삭제했습니다." });
     } catch (error) {
-      this.errorHandling(error, req, res, '댓글 삭제에 실패했습니다.');
-    }
-  }
-
-  // 에러 처리
-  errorHandling = (error, req, res, defaultMessage) => {
-    logger.error(error);
-    console.error(`${req.method} ${req.originalUrl} : ${error.message}`);
-    console.error(error);
-
-    if (!error.errorCode) {
-      return res.status(400).json({ errorMessage: defaultMessage });
-    } else {
-      return res.status(error.errorCode).json({ errorMessage: error.errorMessage });
+      next(error, req, res, '댓글 삭제에 실패했습니다.');
     }
   }
 }

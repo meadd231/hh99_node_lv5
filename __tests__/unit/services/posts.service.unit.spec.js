@@ -119,7 +119,6 @@ describe('Layered Architecture Pattern Posts Service Unit Test', () => {
     };
 
     try {
-      // deletePost를 실행을 시키노.
       const deletePost = await postService.deletePost(postData);
     } catch (error) {
       // catch가 보통 error가 터졌을 때 여기에 코드 흐름이 실행되는 건가?
@@ -131,5 +130,29 @@ describe('Layered Architecture Pattern Posts Service Unit Test', () => {
       expect(error.errorMessage).toEqual('게시글이 존재하지 않습니다.');
     }
 
+  });
+
+  /**
+   1. given
+   2. when
+   3. then
+   구조를 통해 작성하자
+   */
+  test('PostsService putPost Success Test', async () => {
+    const postData = {
+      userId: 1,
+      postId: 1,
+      title: 'putPost Title',
+      content: 'putPost Content'
+    };
+    mockPostsRepository.findOne = jest.fn(() => postData);
+
+    const { title, content, userId, postId } = postData;
+    const updateValue = { title, content, updatedAt: Date.now() };
+    const whereOption = { userId, postId };
+
+    await postService.putPost(postData);
+    expect(mockPostsRepository.update).toHaveBeenCalledTimes(1);
+    expect(mockPostsRepository.update).toHaveBeenCalledWith(updateValue, whereOption);
   });
 });

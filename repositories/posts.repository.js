@@ -3,7 +3,7 @@ class PostRepository {
     this.postsModel = postsModel;
   }
   create = async (input) => {
-    return await this.postsModel.create(input);
+    await this.postsModel.create(input);
   }
 
   findAll = async () => {
@@ -20,8 +20,9 @@ class PostRepository {
     });
   }
 
-  update = async (input, postId) => {
-    await this.postsModel.update(input, { where: { postId } });
+  // 어떤 값들을 매개변수로 받아와야 할까?
+  update = async (updateValue, whereOption) => {
+    await this.postsModel.update(updateValue, { where: whereOption });
   }
 
   delete = async (postId) => {

@@ -4,7 +4,7 @@ const AppError = require('../utils/appError');
 class AuthController {
   authService = new AuthService();
 
-  signup = async (req, res) => {
+  signup = async (req, res, next) => {
     try {
       const { nickname, password, confirm } = req.body;
 
@@ -33,29 +33,18 @@ class AuthController {
       await this.authService.sginup({ nickname, password });
       return res.status(201).json({ message: "회원 가입에 성공하였습니다." });
     } catch (error) {
-      errorHandling(error, req, res, '회원 가입에 실패하였습니다.');
+      next(error, req, res, '회원 가입에 실패하였습니다.');
     }
   }
 
-  login = async (req, res) => {
+  login = async (req, res, next) => {
     try {
       const { nickname, password } = req.body;
       const token = await this.authService.login({ nickname, password });
       res.cookie("Authorization", `Bearer ${token}`);
       res.status(200).json({ token });
     } catch (error) {
-      errorHandling(error, req, res, '로그인에 실패하였습니다.');
-    }
-  }
-
-  errorHandling = (error, req, res, defaultMessage) => {
-    console.error(`${req.method} ${req.originalUrl} : ${error.message}`);
-    console.error(error);
-
-    if (!error.errorCode) {
-      return res.status(400).json({ errorMessage: defaultMessage });
-    } else {
-      return res.status(error.errorCode).json({ errorMessage: error.errorMessage });
+      next(error, req, res, '로그인에 실패하였습니다.');
     }
   }
 }

@@ -29,21 +29,22 @@ class PostService {
     return post;
   }
 
-  putPost = async (input) => {
+  putPost = async (postData) => {
 
-    const post = await this.postRepository.findOne(input.postId);
+    const post = await this.postRepository.findOne(postData.postId);
     if (!post) {
       throw new AppError(404, '게시글이 존재하지 않습니다.');
     }
 
-    if (post.userId != input.userId) {
+    if (post.userId != postData.userId) {
       throw new AppError(403, '게시글의 수정 권한이 존재하지 않습니다.');
     }
 
-    const { title, content } = input;
-    const postData = { title, content };
-    postData.updatedAt = Date.now();
-    await this.postRepository.update(postData, input.postId);
+    const { title, content, userId, postId } = postData;
+    const updateValue = { title, content };
+    const whereOption = { userId, postId };
+    updateValue.updatedAt = Date.now();
+    await this.postRepository.update(updateValue, whereOption);
   }
 
   deletePost = async (input) => {
