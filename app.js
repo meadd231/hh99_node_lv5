@@ -43,3 +43,5 @@ app.listen(port, () => {
   logger.info('Server is running on port 3000');
   console.log(port, '포트로 서버가 열렸어요!');
 });
+
+module.exports = app;
